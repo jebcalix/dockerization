@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: hotel-booking
+      MYSQL_USER: mysql-user
+      MYSQL_PASSWORD: 123456
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: mysql-user
+      WORDPRESS_DB_PASSWORD: 123456
+      WORDPRESS_DB_NAME: hotel-booking
+    volumes:
+      - "./:/var/www/html"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: mysql-user
+      PMA_PASSWORD: 123456
+
+volumes:
+  mysql: {}
