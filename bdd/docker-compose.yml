@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./data:/var/lib/postgresql
+      - ./data/postgres:/var/lib/postgresql
     restart: unless-stopped
     networks:
       - pg
@@ -21,25 +21,39 @@ services:
       PGADMIN_DEFAULT_PASSWORD: 123456
     depends_on:
       - pg
-  mysql:
-    image: mysql:latest
+    networks:
+      - pg
+  mariadb:
+    image: mariadb:latest
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: postgres
-      MYSQL_USER: postgres
-      MYSQL_PASSWORD: postgres
+      MYSQL_DATABASE: mariadb
+      MYSQL_USER: mariadb
+      MYSQL_PASSWORD: mariadb
     volumes:
-      - ./data:/var/lib/mysql
-    restart: unless-stopped
+      - ./data/mariadb:/var/lib/mariadb
     networks:
-      - mysql
+      - mariadb
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 123456
+    depends_on:
+      - mariadb
+    networks:
+      - mariadb
 
 networks:
   pg:
     driver: bridge
   pgadmin:
     driver: bridge
-  mysql:
+  mariadb:
     driver: bridge
