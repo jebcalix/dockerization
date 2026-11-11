@@ -133,3 +133,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Homelab stack (datos locales)
+/stack/.env
+/stack/adguard/
+/stack/npm/
+/stack/portainer/
+/stack/pterodactyl/
+/stack/wings/etc/config.yml
+
